@@ -364,8 +364,8 @@
       <!-- Detail Navigation Tabs -->
       <div class="flex items-center px-5 border-b gap-3 text-xs font-semibold" style="border-color: var(--border); background-color: var(--background);">
         <button onclick="setDetailTab('overview')" id="tabBtnOverview" class="py-3 border-b-2 border-blue-500 text-blue-500 transition" data-i18n="tabOverview">總覽與觸發時機</button>
-        <button onclick="setDetailTab('usage')" id="tabBtnUsage" class="py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabUsage">如何使用 (How to Use)</button>
-        <button onclick="setDetailTab('architecture')" id="tabBtnArch" class="py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabArchitecture">核心內容與架構 (Content)</button>
+        <button onclick="setDetailTab('usage')" id="tabBtnUsage" class="private-only py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabUsage">如何使用 (How to Use)</button>
+        <button onclick="setDetailTab('architecture')" id="tabBtnArch" class="private-only py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabArchitecture">核心內容與架構 (Content)</button>
         <button onclick="setDetailTab('raw')" id="tabBtnRaw" class="private-only py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabRaw">原始 SKILL.md</button>
       </div>
 
@@ -917,7 +917,7 @@
               </button>
 
               <div class="flex items-center gap-1">
-                <button onclick="copyUsagePrompt('${escapeHtml(skill.id)}')" title="複製使用指令/提示詞" class="p-2 rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
+                <button onclick="copyUsagePrompt('${escapeHtml(skill.id)}')" title="複製使用指令/提示詞" class="private-only p-2 rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
                   📋
                 </button>
                 <button onclick="editSkillById('${escapeHtml(skill.id)}')" title="編輯技能" class="private-only p-2 rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
@@ -970,7 +970,7 @@
                 <button onclick="openSkillDetail('${escapeHtml(skill.id)}')" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white" style="background-color: var(--primary);">
                   ${currentLang === "zh" ? "檢視" : "View"}
                 </button>
-                <button onclick="copyUsagePrompt('${escapeHtml(skill.id)}')" class="p-1.5 rounded-lg border text-xs" style="border-color: var(--border);">
+                <button onclick="copyUsagePrompt('${escapeHtml(skill.id)}')" class="private-only p-1.5 rounded-lg border text-xs" style="border-color: var(--border);">
                   📋
                 </button>
                 <button onclick="editSkillById('${escapeHtml(skill.id)}')" class="private-only p-1.5 rounded-lg border text-xs" style="border-color: var(--border);">
@@ -1395,6 +1395,7 @@ ${skill.architecture}
     }
 
     function copyUsagePrompt(id) {
+      if (window.PUBLIC_MODE) { return; }
       const skill = skills.find(s => s.id === id);
       if (!skill) return;
 
