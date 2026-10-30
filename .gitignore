@@ -1,0 +1,11 @@
+# =================================================================
+# Private local root databases (Contains proprietary prompts & local paths)
+# =================================================================
+/skills_data.json
+/skills_data.js
+
+# Python cache & OS files
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

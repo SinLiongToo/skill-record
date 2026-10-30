@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillVault - Antigravity & Claude Code Skill Hub</title>
+  <!-- Tailwind CSS -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* CSS Variables for Host & Standalone Dual Theme */
+    :root, [data-theme="light"] {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --foreground: #0f172a;
+      --muted-foreground: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-foreground: #ffffff;
+      --accent: #eff6ff;
+      --accent-foreground: #1e40af;
+      --badge-bg: #e2e8f0;
+      --code-bg: #f1f5f9;
+      --code-fg: #0f172a;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    [data-theme="dark"] {
+      --background: #0b0f19;
+      --card: #131b2e;
+      --card-hover: #1c2744;
+      --border: #233152;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-foreground: #ffffff;
+      --accent: #1e293b;
+      --accent-foreground: #93c5fd;
+      --badge-bg: #1e293b;
+      --code-bg: #090d16;
+      --code-fg: #e2e8f0;
+      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--background);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted-foreground);
+    }
+
+    pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .agent-badge-antigravity {
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+    .agent-badge-claude {
+      background-color: rgba(168, 85, 247, 0.12);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.25);
+    }
+    .agent-badge-cross {
+      background-color: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+    body.public-mode .private-only {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="p-3 md:p-6 lg:p-8">
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Top Navigation & Brand Header -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl border" style="background-color: var(--card); border-color: var(--border); box-shadow: var(--shadow);">
+      <div class="flex items-start md:items-center gap-3.5">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-2xl text-white shadow-md flex-shrink-0" style="background: linear-gradient(135deg, #3b82f6, #9333ea);">
+          ⚡
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight" data-i18n="appTitle">SkillVault</h1>
+            <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full border border-blue-500/30 text-blue-500 bg-blue-500/10" data-i18n="badgeApp">Antigravity & Claude Code 雙生態中心</span>
+            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full border private-only" style="border-color: var(--border); color: var(--muted-foreground);" id="statusPersistence">● 本地持久化 (v2)</span>
+            <span class="hidden px-2.5 py-0.5 text-xs font-semibold rounded-full border border-emerald-500/30 text-emerald-400 bg-emerald-500/10" id="publicModeBadge">🌐 公開技術展示版 (Public Showcase) · 原始提示詞與本機路徑已安全遮罩</span>
+          </div>
+          <p class="text-sm mt-1" style="color: var(--muted-foreground);" data-i18n="appSubtitle">
+            整合 Antigravity 與 Claude Code 自製技能庫，追蹤應用專案、觸發時機、使用指引與架構規格
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- How to Update Guide Button -->
+        <button onclick="openSyncGuideModal()" class="private-only px-3.5 py-2 text-xs font-semibold rounded-xl border flex items-center gap-1.5 transition hover:opacity-85" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);" title="未來更新與同步教學">
+          <span>🔄</span>
+          <span data-i18n="btnSyncGuide">更新與同步指南</span>
+        </button>
+
+        <!-- New Skill Button -->
+        <button onclick="openSkillModal()" class="private-only px-4 py-2 text-xs font-semibold rounded-xl text-white shadow-md flex items-center gap-1.5 transition transform active:scale-95" style="background-color: var(--primary);">
+          <span>➕</span>
+          <span data-i18n="btnNewSkill">記錄新技能</span>
+        </button>
+
+        <!-- Export / Import -->
+        <button onclick="exportLibraryJSON()" title="Export JSON" class="p-2 rounded-xl border text-xs font-medium transition hover:opacity-85 flex items-center gap-1" style="background-color: var(--card); border-color: var(--border);">
+          <span>💾</span>
+          <span class="hidden sm:inline" data-i18n="btnExport">匯出</span>
+        </button>
+
+        <label for="importFileInput" title="Import JSON" class="private-only p-2 rounded-xl border text-xs font-medium transition hover:opacity-85 flex items-center gap-1 cursor-pointer" style="background-color: var(--card); border-color: var(--border);">
+          <span>📂</span>
+          <span class="hidden sm:inline" data-i18n="btnImport">匯入</span>
+          <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importLibraryJSON(event)">
+        </label>
+
+        <!-- Language Toggle -->
+        <button onclick="toggleLanguage()" class="p-2 rounded-xl border text-xs font-medium transition hover:opacity-85 flex items-center gap-1" style="background-color: var(--card); border-color: var(--border);">
+          <span>🌐</span>
+          <span id="langLabel">繁體中文</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" class="p-2 rounded-xl border text-xs font-medium transition hover:opacity-85" style="background-color: var(--card); border-color: var(--border);" title="Toggle Dark/Light Mode">
+          <span id="themeIcon">☀️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Metrics & Statistics Bar -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+      <div class="p-4 rounded-xl border flex flex-col justify-between" style="background-color: var(--card); border-color: var(--border);">
+        <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--muted-foreground);" data-i18n="statTotalSkills">全部技能總數</div>
+        <div class="text-2xl sm:text-3xl font-extrabold mt-1 text-blue-500" id="statCountTotal">39</div>
+      </div>
+      <div class="p-4 rounded-xl border flex flex-col justify-between" style="background-color: var(--card); border-color: var(--border);">
+        <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--muted-foreground);" data-i18n="statAgentBreakdown">生態來源分佈</div>
+        <div class="text-sm font-semibold mt-1 flex items-center gap-2">
+          <span class="text-blue-400">⚡ <span id="statCountAgy">26</span> AGY</span>
+          <span class="text-purple-400">🟣 <span id="statCountClaude">10</span> Claude</span>
+          <span class="text-amber-400">🌐 <span id="statCountCross">3</span> 通用</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl border flex flex-col justify-between" style="background-color: var(--card); border-color: var(--border);">
+        <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--muted-foreground);" data-i18n="statAssociatedProjects">涵蓋應用專案</div>
+        <div class="text-2xl sm:text-3xl font-extrabold mt-1 text-emerald-500" id="statCountProjects">50+</div>
+      </div>
+      <div class="p-4 rounded-xl border flex flex-col justify-between" style="background-color: var(--card); border-color: var(--border);">
+        <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--muted-foreground);" data-i18n="statUsageRecipes">可用指令與範例</div>
+        <div class="text-2xl sm:text-3xl font-extrabold mt-1 text-amber-500" id="statCountRecipes">85+</div>
+      </div>
+    </section>
+
+    <!-- Filter & Search Toolstrip -->
+    <section class="p-4 rounded-2xl border space-y-3.5" style="background-color: var(--card); border-color: var(--border);">
+      
+      <!-- Top Row: Search + Agent Selector + Project Dropdown + View Mode -->
+      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <!-- Search Input -->
+        <div class="relative flex-1 min-w-[220px]">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm" style="color: var(--muted-foreground);">🔍</span>
+          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋技能名稱、描述、應用專案、指令或標籤..." class="w-full pl-10 pr-4 py-2 text-xs rounded-xl border outline-none transition focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);" data-i18n-placeholder="searchPlaceholder">
+        </div>
+
+        <!-- Agent Source Tabs -->
+        <div class="flex items-center gap-1.5 text-xs bg-slate-900/40 p-1 rounded-xl border" style="border-color: var(--border);">
+          <button onclick="setAgentFilter('ALL')" id="agentTabALL" class="px-2.5 py-1 rounded-lg font-semibold transition" style="background-color: var(--primary); color: white;">全部 (39)</button>
+          <button onclick="setAgentFilter('Antigravity')" id="agentTabAntigravity" class="px-2.5 py-1 rounded-lg font-medium transition text-muted-foreground hover:text-blue-400">⚡ Antigravity (26)</button>
+          <button onclick="setAgentFilter('Claude Code')" id="agentTabClaude" class="px-2.5 py-1 rounded-lg font-medium transition text-muted-foreground hover:text-purple-400">🟣 Claude (10)</button>
+          <button onclick="setAgentFilter('Cross-Agent')" id="agentTabCross" class="px-2.5 py-1 rounded-lg font-medium transition text-muted-foreground hover:text-amber-400">🌐 通用 (3)</button>
+        </div>
+
+        <!-- Project Filter Dropdown -->
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <span class="text-xs text-muted-foreground hidden lg:inline">📁 專案:</span>
+          <select id="projectFilterSelect" onchange="handleProjectSelect(event)" class="text-xs px-2.5 py-2 rounded-xl border outline-none font-medium transition" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+            <option value="ALL">全部專案 (All Projects)</option>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <!-- View Mode Switcher -->
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button onclick="setViewMode('grid')" id="btnViewGrid" class="p-2 rounded-lg border text-xs transition" style="background-color: var(--primary); color: var(--primary-foreground); border-color: var(--primary);" title="卡片檢視">
+            🔲
+          </button>
+          <button onclick="setViewMode('table')" id="btnViewTable" class="p-2 rounded-lg border text-xs transition" style="background-color: var(--card); color: var(--muted-foreground); border-color: var(--border);" title="清單檢視">
+            📋
+          </button>
+          <button onclick="resetDefaults()" class="text-xs px-2.5 py-2 rounded-lg border hover:text-red-400 transition" style="border-color: var(--border); color: var(--muted-foreground);" title="重設為預設技能庫" data-i18n="btnReset">
+            ↺ 重設
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Category Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pt-1 text-xs no-scrollbar" id="categoryFilterContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Main Content Area: Skill Cards Grid or Table -->
+    <main>
+      <!-- Grid View -->
+      <div id="skillsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Cards injected dynamically -->
+      </div>
+
+      <!-- Table View (Hidden by default) -->
+      <div id="skillsTableWrapper" class="hidden overflow-x-auto rounded-2xl border" style="background-color: var(--card); border-color: var(--border);">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead>
+            <tr class="border-b" style="border-color: var(--border); background-color: var(--background);">
+              <th class="p-4 font-semibold" data-i18n="thSkillName">技能名稱</th>
+              <th class="p-4 font-semibold" data-i18n="thAgent">生態來源</th>
+              <th class="p-4 font-semibold" data-i18n="thCategory">分類</th>
+              <th class="p-4 font-semibold" data-i18n="thProjects">應用專案</th>
+              <th class="p-4 font-semibold" data-i18n="thDescription">用途描述</th>
+              <th class="p-4 font-semibold text-right" data-i18n="thActions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="skillsTableBody">
+            <!-- Table rows injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State Notice -->
+      <div id="emptyState" class="hidden text-center py-16 px-4 rounded-2xl border mt-4" style="background-color: var(--card); border-color: var(--border);">
+        <div class="text-4xl mb-3">🔎</div>
+        <h3 class="text-lg font-bold" data-i18n="emptyTitle">找不到符合條件的技能</h3>
+        <p class="text-xs mt-1 max-w-md mx-auto" style="color: var(--muted-foreground);" data-i18n="emptySubtitle">請嘗試變更搜尋關鍵字、專案篩選或生態來源，或點選右上角「記錄新技能」。</p>
+        <button onclick="clearFilters()" class="mt-4 px-4 py-2 text-xs font-semibold rounded-xl text-white" style="background-color: var(--primary);" data-i18n="btnClearFilters">清除所有篩選</button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="pt-6 pb-12 text-center text-xs border-t" style="border-color: var(--border); color: var(--muted-foreground);">
+      <p>SkillVault • Unified Knowledge Hub for Antigravity & Claude Code • LocalStorage Persistent</p>
+      <p class="mt-1">Auto-sync tool: <code class="px-1.5 py-0.5 rounded" style="background-color: var(--badge-bg);">python sync_skills.py</code></p>
+      <p class="mt-1">🕒 <span id="lastUpdatedLabel">最後更新</span>: <strong id="lastUpdatedValue">—</strong></p>
+    </footer>
+  </div>
+
+  <!-- ================= MODAL 1: SYNC & FUTURE UPDATE GUIDE ================= -->
+  <div id="syncGuideModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 hidden modal-backdrop">
+    <div class="w-full max-w-2xl max-h-[90vh] rounded-2xl border flex flex-col overflow-hidden shadow-2xl transition" style="background-color: var(--card); border-color: var(--border);">
+      <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border);">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">🔄</span>
+          <div>
+            <h2 class="text-lg font-bold" data-i18n="guideTitle">未來技能更新與同步指南</h2>
+            <p class="text-xs text-muted-foreground">當有新的技能建立或現有技能升級時的三種更新方式</p>
+          </div>
+        </div>
+        <button onclick="closeSyncGuideModal()" class="p-2 rounded-lg border text-sm font-bold hover:opacity-85 transition" style="border-color: var(--border);">✕</button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-5 text-xs leading-relaxed flex-1">
+        
+        <!-- Method 1 -->
+        <div class="p-4 rounded-xl border space-y-2" style="background-color: var(--background); border-color: var(--border);">
+          <div class="flex items-center gap-2 text-sm font-bold text-blue-400">
+            <span>⚡ 方法 1：執行一鍵自動掃描同步腳本 (最推薦)</span>
+          </div>
+          <p class="text-muted-foreground">
+            我們已為您撰寫了專屬的自動同步腳本 <code class="text-blue-300 font-mono">sync_skills.py</code>。它會全自動掃描您的 <strong>Antigravity 全域目錄</strong> (<code class="text-xs">~/.gemini/config/skills</code>) 與 <strong>所有專案內的技能目錄</strong> (<code class="text-xs">.claude/skills</code>, <code class="text-xs">.agents/skills</code>, <code class="text-xs">.agent/skills</code>, <code class="text-xs">.gemini/skills</code>, <code class="text-xs">skills</code>)，並比對應用專案名稱，一鍵自動同步至 <code class="text-xs">skills_data.json</code> 與前端介面！
+          </p>
+          <div class="p-3 rounded-lg font-mono text-xs flex items-center justify-between" style="background-color: var(--code-bg); color: var(--code-fg);">
+            <code>python sync_skills.py</code>
+            <button onclick="copyTextToClipboard('python sync_skills.py')" class="px-2 py-1 rounded border text-xs hover:opacity-85" style="border-color: var(--border);">📋 複製指令</button>
+          </div>
+        </div>
+
+        <!-- Method 2 -->
+        <div class="p-4 rounded-xl border space-y-2" style="background-color: var(--background); border-color: var(--border);">
+          <div class="flex items-center gap-2 text-sm font-bold text-purple-400">
+            <span>📝 方法 2：在 Web 介面直接新增或編輯</span>
+          </div>
+          <p class="text-muted-foreground">
+            點擊右上角的「<strong>➕ 記錄新技能</strong>」或卡片上的「<strong>✏️ 編輯</strong>」按鈕，直接在網頁表單中修改名稱、生態來源（Antigravity 或 Claude）、應用專案、使用指引與架構，資料會立即儲存於瀏覽器的 <code class="text-xs font-mono">localStorage</code>，關閉或重新整理網頁都不會遺失。
+          </p>
+        </div>
+
+        <!-- Method 3 -->
+        <div class="p-4 rounded-xl border space-y-2" style="background-color: var(--background); border-color: var(--border);">
+          <div class="flex items-center gap-2 text-sm font-bold text-emerald-400">
+            <span>💾 方法 3：JSON 匯出備份與跨電腦還原</span>
+          </div>
+          <p class="text-muted-foreground">
+            點擊頂部的「<strong>💾 匯出</strong>」可將整個技能庫下載為包含 39+ 項技能與關聯專案的完整 JSON 備份檔。換電腦或跨瀏覽器時，只要點擊「<strong>📂 匯入</strong>」即可秒級載入完整技能庫。
+          </p>
+        </div>
+
+      </div>
+      <div class="p-4 border-t flex justify-end" style="border-color: var(--border);">
+        <button onclick="closeSyncGuideModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-white" style="background-color: var(--primary);">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: SKILL DETAIL INSPECTOR ================= -->
+  <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 hidden modal-backdrop">
+    <div class="w-full max-w-4xl max-h-[90vh] rounded-2xl border flex flex-col overflow-hidden shadow-2xl transition" style="background-color: var(--card); border-color: var(--border);">
+      <!-- Modal Header -->
+      <div class="p-5 border-b flex items-center justify-between gap-4" style="border-color: var(--border); background-color: var(--card);">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xl text-white shadow" id="detailIcon" style="background: linear-gradient(135deg, #3b82f6, #9333ea);">
+            ⚡
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h2 class="text-lg font-bold" id="detailTitle">Skill Name</h2>
+              <span class="px-2 py-0.5 text-xs font-medium rounded-full" id="detailAgentBadge">Agent</span>
+              <span class="px-2 py-0.5 text-xs font-medium rounded-full" id="detailCategoryBadge" style="background-color: var(--accent); color: var(--accent-foreground);">Category</span>
+            </div>
+            <p class="text-xs font-mono mt-0.5 truncate max-w-md" style="color: var(--muted-foreground);" id="detailPath">C:/Users/.../SKILL.md</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="editCurrentSkill()" class="private-only p-2 rounded-lg border text-xs font-semibold hover:opacity-85 transition" style="border-color: var(--border);" title="編輯此技能">
+            ✏️ <span class="hidden sm:inline" data-i18n="btnEdit">編輯</span>
+          </button>
+          <button onclick="copyDetailSkillMD()" class="private-only p-2 rounded-lg border text-xs font-semibold hover:opacity-85 transition" style="border-color: var(--border);" title="複製完整 SKILL.md">
+            📋 <span class="hidden sm:inline" data-i18n="btnCopyFull">複製全篇</span>
+          </button>
+          <button onclick="closeDetailModal()" class="p-2 rounded-lg border text-sm font-bold hover:opacity-85 transition" style="border-color: var(--border);">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Detail Navigation Tabs -->
+      <div class="flex items-center px-5 border-b gap-3 text-xs font-semibold" style="border-color: var(--border); background-color: var(--background);">
+        <button onclick="setDetailTab('overview')" id="tabBtnOverview" class="py-3 border-b-2 border-blue-500 text-blue-500 transition" data-i18n="tabOverview">總覽與觸發時機</button>
+        <button onclick="setDetailTab('usage')" id="tabBtnUsage" class="py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabUsage">如何使用 (How to Use)</button>
+        <button onclick="setDetailTab('architecture')" id="tabBtnArch" class="py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabArchitecture">核心內容與架構 (Content)</button>
+        <button onclick="setDetailTab('raw')" id="tabBtnRaw" class="private-only py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground" data-i18n="tabRaw">原始 SKILL.md</button>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div class="p-6 overflow-y-auto space-y-5 text-sm flex-1" id="detailContentContainer">
+        <!-- Injected dynamically based on active tab -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t flex items-center justify-between gap-3 text-xs" style="border-color: var(--border); background-color: var(--card);">
+        <div class="flex items-center gap-1.5 flex-wrap" id="detailTagsContainer">
+          <!-- Tags injected -->
+        </div>
+        <button onclick="closeDetailModal()" class="px-4 py-2 font-semibold rounded-xl border hover:opacity-85 transition" style="border-color: var(--border);" data-i18n="btnClose">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 3: ADD / EDIT SKILL ================= -->
+  <div id="formModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 hidden modal-backdrop">
+    <div class="w-full max-w-3xl max-h-[92vh] rounded-2xl border flex flex-col overflow-hidden shadow-2xl transition" style="background-color: var(--card); border-color: var(--border);">
+      <div class="p-5 border-b flex items-center justify-between" style="border-color: var(--border);">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📝</span>
+          <h2 class="text-lg font-bold" id="formModalTitle" data-i18n="modalNewTitle">記錄 / 建立新技能</h2>
+        </div>
+        <button onclick="closeFormModal()" class="p-2 rounded-lg border text-sm font-bold hover:opacity-85 transition" style="border-color: var(--border);">✕</button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="skillForm" onsubmit="handleFormSubmit(event)" class="p-6 overflow-y-auto space-y-4 text-xs flex-1">
+        <input type="hidden" id="formSkillId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold mb-1" data-i18n="labelSkillName">技能標識符 (Skill ID / Name)*</label>
+            <input type="text" id="formName" required placeholder="例如: run-taigi-tts" class="w-full px-3 py-2 rounded-xl border outline-none font-mono focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1" data-i18n="labelAgent">生態來源 (Agent)*</label>
+            <select id="formAgent" required class="w-full px-3 py-2 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+              <option value="Antigravity">⚡ Antigravity / Gemini</option>
+              <option value="Claude Code">🟣 Claude Code</option>
+              <option value="Cross-Agent">🌐 Cross-Agent (通用)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1" data-i18n="labelCategory">分類 (Category)*</label>
+            <input type="text" id="formCategory" required placeholder="例如: Audio & Speech 或 Culture & Game" class="w-full px-3 py-2 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1" data-i18n="labelProjects">應用專案 (逗號分隔，如: project_claude_TG_game, 台文教學互動app)</label>
+          <input type="text" id="formProjects" placeholder="填寫使用此技能的專案資料夾名稱..." class="w-full px-3 py-2 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1" data-i18n="labelTags">標籤 (逗號分隔)</label>
+            <input type="text" id="formTags" placeholder="Playwright, TTS, Taiwanese, Whisper..." class="w-full px-3 py-2 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1" data-i18n="labelPath">本機路徑 (Path to SKILL.md)</label>
+            <input type="text" id="formPath" placeholder="C:\Users\...\SKILL.md" class="w-full px-3 py-2 rounded-xl border outline-none font-mono focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1" data-i18n="labelDesc">技能簡介與核心用途 (Description)*</label>
+          <textarea id="formDescription" required rows="2" placeholder="詳細說明此技能解決什麼問題、主要功能與特色..." class="w-full px-3 py-2 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1" data-i18n="labelWhenToUse">觸發時機 (When to Use / Trigger Conditions)</label>
+          <textarea id="formWhenToUse" rows="2" placeholder="例如: 當使用者要求測試台語語音功能時觸發..." class="w-full px-3 py-2 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1" data-i18n="labelHowToUse">如何使用 (How to Use: 範例指令、步驟與依賴)*</label>
+          <textarea id="formHowToUse" required rows="5" placeholder="提供完整的終端指令、Playwright 測試命令、呼叫範例與參數說明..." class="w-full px-3 py-2 rounded-xl border outline-none font-mono focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1" data-i18n="labelContent">核心內容與架構 (Content & Architecture: 關鍵檔案、規格)*</label>
+          <textarea id="formArchitecture" required rows="5" placeholder="說明伴隨腳本、檔案加載順序、資料結構、設計細節..." class="w-full px-3 py-2 rounded-xl border outline-none font-mono focus:ring-2 focus:ring-blue-500" style="background-color: var(--background); border-color: var(--border); color: var(--foreground);"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t" style="border-color: var(--border);">
+          <button type="button" onclick="closeFormModal()" class="px-4 py-2 font-semibold rounded-xl border hover:opacity-85 transition" style="border-color: var(--border);" data-i18n="btnCancel">取消</button>
+          <button type="submit" class="px-5 py-2 font-semibold rounded-xl text-white shadow transition" style="background-color: var(--primary);" data-i18n="btnSaveSkill">儲存技能資料</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none px-4 py-3 rounded-xl border shadow-xl flex items-center gap-2 text-xs font-semibold" style="background-color: var(--card); border-color: var(--border);">
+    <span id="toastIcon">✅</span>
+    <span id="toastMessage">已成功儲存</span>
+  </div>
+
+  <script src="skills_data.js"></script>
+  <script>if (!window.SKILLS_DATA) { document.write('<script src="docs/skills_data.js"><\/script>'); }</script>
+  <!-- JavaScript Application Logic -->
+  <script>
+    // ================= 1. PRELOADED DATA (39 SKILLS IN TOTAL) =================
+    // Auto-scanned from C:\Users\tu-hs\.gemini\config\skills and project skill folders
+    let DEFAULT_SKILLS = Array.isArray(window.SKILLS_DATA) ? window.SKILLS_DATA : [];
+
+    // ================= 2. STATE & STORAGE =================
+    const STORAGE_KEY = "antigravity_skill_records_v3";
+    let skills = [];
+    let activeAgentFilter = "ALL";
+    let activeFilterCategory = "ALL";
+    let activeProjectFilter = "ALL";
+    let activeViewMode = "grid";
+    let currentDetailSkillId = null;
+    let currentDetailTab = "overview";
+    let currentLang = "zh";
+    let currentTheme = "dark";
+
+    const i18n = {
+      zh: {
+        appTitle: "SkillVault",
+        badgeApp: "Antigravity & Claude Code 雙生態中心",
+        appSubtitle: "整合 Antigravity 與 Claude Code 自製技能庫，追蹤應用專案、觸發時機、使用指引與架構規格",
+        btnSyncGuide: "更新與同步指南",
+        btnNewSkill: "記錄新技能",
+        btnExport: "匯出",
+        btnImport: "匯入",
+        btnReset: "↺ 重設",
+        statTotalSkills: "全部技能總數",
+        statAgentBreakdown: "生態來源分佈",
+        statAssociatedProjects: "涵蓋應用專案",
+        statUsageRecipes: "可用指令與範例",
+        searchPlaceholder: "搜尋技能名稱、描述、應用專案、指令或標籤...",
+        guideTitle: "未來技能更新與同步指南",
+        thSkillName: "技能名稱",
+        thAgent: "生態來源",
+        thCategory: "分類",
+        thProjects: "應用專案",
+        thDescription: "用途描述",
+        thActions: "操作",
+        tabOverview: "總覽與觸發時機",
+        tabUsage: "如何使用 (How to Use)",
+        tabArchitecture: "核心內容與架構 (Content)",
+        tabRaw: "原始 SKILL.md",
+        btnEdit: "編輯",
+        btnCopyFull: "複製全篇",
+        btnClose: "關閉",
+        btnCancel: "取消",
+        btnSaveSkill: "儲存技能資料",
+        modalNewTitle: "記錄 / 建立新技能",
+        modalEditTitle: "編輯技能資料",
+        labelSkillName: "技能標識符 (Skill ID / Name)*",
+        labelAgent: "生態來源 (Agent)*",
+        labelCategory: "分類 (Category)*",
+        labelProjects: "應用專案 (逗號分隔)",
+        labelTags: "標籤 (逗號分隔)",
+        labelPath: "本機路徑 (Path to SKILL.md)",
+        labelDesc: "技能簡介與核心用途 (Description)*",
+        labelWhenToUse: "觸發時機 (When to Use / Trigger Conditions)",
+        labelHowToUse: "如何使用 (How to Use: 範例指令、步驟與依賴)*",
+        labelContent: "核心內容與架構 (Content & Architecture: 關鍵檔案、規格)*",
+        emptyTitle: "找不到符合條件的技能",
+        emptySubtitle: "請嘗試變更搜尋關鍵字、專案篩選或生態來源，或點選右上角「記錄新技能」。",
+        btnClearFilters: "清除所有篩選",
+        toastSaved: "技能資料已成功儲存！",
+        toastCopied: "已成功複製到剪貼簿！",
+        toastReset: "已重設為最新掃描的預設技能庫！",
+        toastImported: "成功匯入技能資料！"
+      },
+      en: {
+        appTitle: "SkillVault",
+        badgeApp: "Antigravity & Claude Code Unified Hub",
+        appSubtitle: "Unified knowledge base tracking Antigravity and Claude Code skills, associated projects, usage recipes, and architecture specs.",
+        btnSyncGuide: "Update & Sync Guide",
+        btnNewSkill: "Record New Skill",
+        btnExport: "Export",
+        btnImport: "Import",
+        btnReset: "↺ Reset",
+        statTotalSkills: "Total Skills",
+        statAgentBreakdown: "Ecosystem Split",
+        statAssociatedProjects: "Active Projects",
+        statUsageRecipes: "Usage Recipes",
+        searchPlaceholder: "Search skill name, description, projects, commands, tags...",
+        guideTitle: "Future Update & Sync Guide",
+        thSkillName: "Skill Name",
+        thAgent: "Agent Source",
+        thCategory: "Category",
+        thProjects: "Projects",
+        thDescription: "Description",
+        thActions: "Actions",
+        tabOverview: "Overview & Trigger",
+        tabUsage: "How to Use",
+        tabArchitecture: "Content & Architecture",
+        tabRaw: "Raw SKILL.md",
+        btnEdit: "Edit",
+        btnCopyFull: "Copy Full MD",
+        btnClose: "Close",
+        btnCancel: "Cancel",
+        btnSaveSkill: "Save Skill Record",
+        modalNewTitle: "Record / Create New Skill",
+        modalEditTitle: "Edit Skill Record",
+        labelSkillName: "Skill ID / Name*",
+        labelAgent: "Agent Source*",
+        labelCategory: "Category*",
+        labelProjects: "Associated Projects (Comma-separated)",
+        labelTags: "Tags (Comma-separated)",
+        labelPath: "Local Path (Path to SKILL.md)",
+        labelDesc: "Description (Summary)*",
+        labelWhenToUse: "Trigger Conditions (When to Use)",
+        labelHowToUse: "How to Use (Commands, steps, dependencies)*",
+        labelContent: "Content & Architecture (Files, specs, logic)*",
+        emptyTitle: "No matching skills found",
+        emptySubtitle: "Try adjusting search query, project filter, or agent source, or click 'Record New Skill'.",
+        btnClearFilters: "Clear All Filters",
+        toastSaved: "Skill record saved successfully!",
+        toastCopied: "Copied to clipboard!",
+        toastReset: "Reset to latest default skill catalog!",
+        toastImported: "Successfully imported skill records!"
+      }
+    };
+
+    // ================= 3. INITIALIZATION =================
+    async function init() {
+      // Public Showcase Mode check (for GitHub Pages deployment)
+      if (window.PUBLIC_MODE) {
+        document.body.classList.add("public-mode");
+        const pubBadge = document.getElementById("publicModeBadge");
+        if (pubBadge) pubBadge.classList.remove("hidden");
+        skills = [...DEFAULT_SKILLS];
+        renderStats();
+        populateCategorySelect();
+        populateProjectSelect();
+        renderSkills();
+        return;
+      }
+
+      // Check saved skills in localStorage
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          skills = JSON.parse(saved);
+        } catch (e) {
+          skills = DEFAULT_SKILLS.length > 0 ? [...DEFAULT_SKILLS] : [];
+        }
+      } else {
+        skills = DEFAULT_SKILLS.length > 0 ? [...DEFAULT_SKILLS] : [];
+        saveSkillsToStorage();
+      }
+
+      // Sync-aware refresh: when sync_skills.py produced a newer dataset, replace synced skills
+      // with their latest content, keep manually-added skills, and append brand-new ones.
+      if (DEFAULT_SKILLS && DEFAULT_SKILLS.length > 0) {
+        const syncedAt = window.SKILLS_SYNCED_AT || "";
+        const lastApplied = localStorage.getItem("skillvault_synced_at") || "";
+        const defaultsByName = new Map(DEFAULT_SKILLS.map(s => [s.name, s]));
+        let changed = false;
+        if (syncedAt && syncedAt !== lastApplied) {
+          const manual = skills.filter(s => !defaultsByName.has(s.name) && !s.path?.includes("SKILL"));
+          skills = [...DEFAULT_SKILLS, ...manual];
+          localStorage.setItem("skillvault_synced_at", syncedAt);
+          changed = true;
+        } else {
+          const existingNames = new Set(skills.map(s => s.name));
+          DEFAULT_SKILLS.forEach(d => { if (!existingNames.has(d.name)) { skills.push(d); changed = true; } });
+        }
+        if (changed) saveSkillsToStorage();
+      }
+
+      // Theme & Lang
+      const savedTheme = localStorage.getItem("skillvault_theme");
+      if (savedTheme) currentTheme = savedTheme;
+      applyTheme();
+
+      const savedLang = localStorage.getItem("skillvault_lang");
+      if (savedLang) currentLang = savedLang;
+      updateLanguageUI();
+
+      populateProjectSelect();
+      renderCategories();
+      renderSkills();
+      renderStats();
+    }
+
+    function saveSkillsToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(skills));
+      const statusEl = document.getElementById("statusPersistence");
+      if (statusEl) {
+        statusEl.innerHTML = currentLang === "zh" ? "● 已同步本機 (v3)" : "● Synced LocalStorage (v3)";
+      }
+    }
+
+    // ================= 4. THEME & LANGUAGE =================
+    function toggleTheme() {
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      localStorage.setItem("skillvault_theme", currentTheme);
+      applyTheme();
+    }
+
+    function applyTheme() {
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      const icon = document.getElementById("themeIcon");
+      if (icon) icon.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "zh" ? "en" : "zh";
+      localStorage.setItem("skillvault_lang", currentLang);
+      updateLanguageUI();
+      renderCategories();
+      renderSkills();
+      renderStats();
+    }
+
+    function updateLanguageUI() {
+      const langLabel = document.getElementById("langLabel");
+      if (langLabel) langLabel.textContent = currentLang === "zh" ? "繁體中文" : "English";
+
+      const luLabel = document.getElementById("lastUpdatedLabel");
+      if (luLabel) luLabel.textContent = currentLang === "zh" ? "最後更新" : "Last updated";
+      const luValue = document.getElementById("lastUpdatedValue");
+      if (luValue) luValue.textContent = window.SKILLS_SYNCED_AT || "—";
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (i18n[currentLang][key]) el.setAttribute("placeholder", i18n[currentLang][key]);
+      });
+    }
+
+    // ================= 5. RENDERING STATS & FILTERS =================
+    function renderStats() {
+      document.getElementById("statCountTotal").textContent = skills.length;
+
+      const agyCount = skills.filter(s => s.agent === "Antigravity").length;
+      const claudeCount = skills.filter(s => s.agent === "Claude Code").length;
+      const crossCount = skills.filter(s => s.agent === "Cross-Agent").length;
+
+      document.getElementById("statCountAgy").textContent = agyCount;
+      document.getElementById("statCountClaude").textContent = claudeCount;
+      document.getElementById("statCountCross").textContent = crossCount;
+
+      // Update agent filter tab labels
+      const tabAll = document.getElementById("agentTabALL");
+      if (tabAll) tabAll.textContent = currentLang === "zh" ? `全部 (${skills.length})` : `All (${skills.length})`;
+      const tabAgy = document.getElementById("agentTabAntigravity");
+      if (tabAgy) tabAgy.textContent = `⚡ Antigravity (${agyCount})`;
+      const tabClaude = document.getElementById("agentTabClaude");
+      if (tabClaude) tabClaude.textContent = `🟣 Claude (${claudeCount})`;
+      const tabCross = document.getElementById("agentTabCross");
+      if (tabCross) tabCross.textContent = currentLang === "zh" ? `🌐 通用 (${crossCount})` : `🌐 Cross (${crossCount})`;
+
+      const allProjects = new Set();
+      skills.forEach(s => (s.projects || []).forEach(p => allProjects.add(p)));
+      document.getElementById("statCountProjects").textContent = allProjects.size;
+
+      let recipeCount = 0;
+      skills.forEach(s => {
+        const matches = (s.howToUse || "").match(/```/g);
+        recipeCount += matches ? Math.floor(matches.length / 2) + 1 : 2;
+      });
+      document.getElementById("statCountRecipes").textContent = recipeCount;
+    }
+
+    function populateProjectSelect() {
+      const select = document.getElementById("projectFilterSelect");
+      if (!select) return;
+
+      const allProjects = new Set();
+      skills.forEach(s => (s.projects || []).forEach(p => allProjects.add(p)));
+      const sorted = Array.from(allProjects).sort();
+
+      const defaultLabel = currentLang === "zh" ? "全部專案 (All Projects)" : "All Projects";
+      select.innerHTML = `<option value="ALL">${defaultLabel}</option>` + sorted.map(proj => `
+        <option value="${escapeHtml(proj)}">${escapeHtml(proj)}</option>
+      `).join("");
+      select.value = activeProjectFilter;
+    }
+
+    function renderCategories() {
+      const container = document.getElementById("categoryFilterContainer");
+      if (!container) return;
+
+      const categories = ["ALL", ...new Set(skills.map(s => s.category))];
+      
+      container.innerHTML = categories.map(cat => {
+        const isActive = activeFilterCategory === cat;
+        const label = cat === "ALL" ? (currentLang === "zh" ? "全部分類" : "All Categories") : cat;
+        return `
+          <button onclick="setCategoryFilter('${escapeHtml(cat)}')" class="px-3 py-1.5 rounded-xl font-medium transition whitespace-nowrap flex items-center gap-1.5 ${
+            isActive ? 'text-white shadow-sm' : 'hover:opacity-85'
+          }" style="${
+            isActive 
+              ? 'background-color: var(--primary);' 
+              : 'background-color: var(--background); border: 1px solid var(--border); color: var(--muted-foreground);'
+          }">
+            <span>${cat === "ALL" ? "🏷️" : "📁"}</span>
+            <span>${escapeHtml(label)}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function getFilteredSkills() {
+      const query = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
+      return skills.filter(skill => {
+        // Agent filter
+        if (activeAgentFilter !== "ALL" && skill.agent !== activeAgentFilter) return false;
+
+        // Category filter
+        if (activeFilterCategory !== "ALL" && skill.category !== activeFilterCategory) return false;
+
+        // Project filter
+        if (activeProjectFilter !== "ALL") {
+          const hasProject = (skill.projects || []).some(p => p.toLowerCase() === activeProjectFilter.toLowerCase());
+          if (!hasProject) return false;
+        }
+
+        if (!query) return true;
+
+        const nameMatch = (skill.name || "").toLowerCase().includes(query);
+        const titleMatch = (skill.title || "").toLowerCase().includes(query);
+        const descMatch = (skill.description || "").toLowerCase().includes(query);
+        const whenMatch = (skill.whenToUse || "").toLowerCase().includes(query);
+        const howMatch = (skill.howToUse || "").toLowerCase().includes(query);
+        const archMatch = (skill.architecture || "").toLowerCase().includes(query);
+        const tagsMatch = (skill.tags || []).some(t => t.toLowerCase().includes(query));
+        const projMatch = (skill.projects || []).some(p => p.toLowerCase().includes(query));
+
+        return nameMatch || titleMatch || descMatch || whenMatch || howMatch || archMatch || tagsMatch || projMatch;
+      });
+    }
+
+    function renderSkills() {
+      const filtered = getFilteredSkills();
+      const gridContainer = document.getElementById("skillsGrid");
+      const tableWrapper = document.getElementById("skillsTableWrapper");
+      const tableBody = document.getElementById("skillsTableBody");
+      const emptyState = document.getElementById("emptyState");
+
+      if (filtered.length === 0) {
+        gridContainer.classList.add("hidden");
+        tableWrapper.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+
+      if (activeViewMode === "grid") {
+        gridContainer.classList.remove("hidden");
+        tableWrapper.classList.add("hidden");
+        renderCardsGrid(filtered, gridContainer);
+      } else {
+        gridContainer.classList.add("hidden");
+        tableWrapper.classList.remove("hidden");
+        renderTableView(filtered, tableBody);
+      }
+    }
+
+    function getAgentBadgeHtml(agent) {
+      if (agent === "Antigravity") {
+        return `<span class="px-2 py-0.5 text-xs font-semibold rounded-full agent-badge-antigravity">⚡ Antigravity</span>`;
+      } else if (agent === "Claude Code") {
+        return `<span class="px-2 py-0.5 text-xs font-semibold rounded-full agent-badge-claude">🟣 Claude Code</span>`;
+      } else {
+        return `<span class="px-2 py-0.5 text-xs font-semibold rounded-full agent-badge-cross">🌐 通用 Cross-Agent</span>`;
+      }
+    }
+
+    function renderCardsGrid(list, container) {
+      container.innerHTML = list.map(skill => {
+        const icon = skill.icon || "⚡";
+        const projects = skill.projects || [];
+
+        return `
+          <div class="rounded-2xl border p-5 flex flex-col justify-between transition hover:-translate-y-1 hover:shadow-xl group" style="background-color: var(--card); border-color: var(--border);">
+            <div>
+              <!-- Header info, Agent & Category -->
+              <div class="flex items-start justify-between gap-2.5 mb-2.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow flex-shrink-0" style="background-color: var(--accent); color: var(--accent-foreground);">
+                    ${icon}
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-base group-hover:text-blue-500 transition line-clamp-1">${escapeHtml(skill.title || skill.name)}</h3>
+                    <code class="text-xs px-1.5 py-0.5 rounded font-mono" style="background-color: var(--badge-bg); color: var(--accent-foreground);">${escapeHtml(skill.name)}</code>
+                  </div>
+                </div>
+                <div class="flex flex-col items-end gap-1 flex-shrink-0">
+                  ${getAgentBadgeHtml(skill.agent)}
+                  <span class="px-2 py-0.5 text-[11px] font-medium rounded-full" style="background-color: var(--badge-bg); color: var(--muted-foreground);">
+                    ${escapeHtml(skill.category)}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Associated Projects Row -->
+              ${projects.length > 0 ? `
+                <div class="my-2.5 p-2 rounded-xl border flex items-start gap-1.5 text-xs" style="background-color: var(--background); border-color: var(--border);">
+                  <span class="font-bold text-muted-foreground flex-shrink-0">📁 應用專案:</span>
+                  <div class="flex items-center gap-1 flex-wrap">
+                    ${projects.slice(0, 3).map(proj => `
+                      <button onclick="filterByProject('${escapeHtml(proj)}')" class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition font-mono text-[11px]" title="點擊依此專案篩選">
+                        ${escapeHtml(proj)}
+                      </button>
+                    `).join("")}
+                    ${projects.length > 3 ? `
+                      <span class="text-[11px] text-muted-foreground font-mono">+${projects.length - 3}</span>
+                    ` : ""}
+                  </div>
+                </div>
+              ` : `
+                <div class="my-2.5 p-2 rounded-xl border flex items-center gap-1.5 text-xs text-muted-foreground" style="background-color: var(--background); border-color: var(--border);">
+                  <span>📁 全域通用 / 獨立工具</span>
+                </div>
+              `}
+
+              <!-- Description -->
+              <p class="text-xs line-clamp-3 mb-3 leading-relaxed" style="color: var(--muted-foreground);">
+                ${escapeHtml(skill.description)}
+              </p>
+
+              <!-- Tags List -->
+              <div class="flex items-center gap-1 flex-wrap mb-4">
+                ${(skill.tags || []).slice(0, 3).map(tag => `
+                  <span class="px-1.5 py-0.5 text-[11px] rounded-md border" style="border-color: var(--border); color: var(--muted-foreground); background-color: var(--background);">
+                    #${escapeHtml(tag)}
+                  </span>
+                `).join("")}
+                ${(skill.tags || []).length > 3 ? `
+                  <span class="text-[11px]" style="color: var(--muted-foreground);">+${(skill.tags.length - 3)}</span>
+                ` : ""}
+              </div>
+            </div>
+
+            <!-- Card Bottom Action Bar -->
+            <div class="pt-3 border-t flex items-center justify-between gap-2 text-xs" style="border-color: var(--border);">
+              <button onclick="openSkillDetail('${escapeHtml(skill.id)}')" class="px-3 py-2 rounded-xl font-semibold text-white shadow-sm transition active:scale-95 flex items-center gap-1.5" style="background-color: var(--primary);">
+                <span>📖</span>
+                <span>${currentLang === "zh" ? "檢視指引與專案" : "View Guide & Projects"}</span>
+              </button>
+
+              <div class="flex items-center gap-1">
+                <button onclick="copyUsagePrompt('${escapeHtml(skill.id)}')" title="複製使用指令/提示詞" class="p-2 rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
+                  📋
+                </button>
+                <button onclick="editSkillById('${escapeHtml(skill.id)}')" title="編輯技能" class="private-only p-2 rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
+                  ✏️
+                </button>
+                <button onclick="deleteSkillById('${escapeHtml(skill.id)}')" title="刪除技能" class="private-only p-2 rounded-lg border hover:text-red-400 transition" style="border-color: var(--border);">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderTableView(list, tbody) {
+      tbody.innerHTML = list.map(skill => {
+        const projects = skill.projects || [];
+        return `
+          <tr class="border-b transition hover:opacity-90" style="border-color: var(--border);">
+            <td class="p-4">
+              <div class="font-bold flex items-center gap-2">
+                <span>${skill.icon || "⚡"}</span>
+                <span>${escapeHtml(skill.title || skill.name)}</span>
+              </div>
+              <code class="text-xs font-mono text-blue-400">${escapeHtml(skill.name)}</code>
+            </td>
+            <td class="p-4 whitespace-nowrap">
+              ${getAgentBadgeHtml(skill.agent)}
+            </td>
+            <td class="p-4 whitespace-nowrap">
+              <span class="px-2 py-0.5 text-xs rounded-full" style="background-color: var(--accent); color: var(--accent-foreground);">
+                ${escapeHtml(skill.category)}
+              </span>
+            </td>
+            <td class="p-4 max-w-xs">
+              <div class="flex items-center gap-1 flex-wrap">
+                ${projects.map(p => `
+                  <button onclick="filterByProject('${escapeHtml(p)}')" class="text-[11px] px-1.5 py-0.5 rounded font-mono bg-blue-500/10 text-blue-400">
+                    ${escapeHtml(p)}
+                  </button>
+                `).join("")}
+              </div>
+            </td>
+            <td class="p-4 max-w-sm">
+              <p class="text-xs line-clamp-2" style="color: var(--muted-foreground);">${escapeHtml(skill.description)}</p>
+            </td>
+            <td class="p-4 text-right whitespace-nowrap">
+              <div class="flex items-center justify-end gap-1.5">
+                <button onclick="openSkillDetail('${escapeHtml(skill.id)}')" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white" style="background-color: var(--primary);">
+                  ${currentLang === "zh" ? "檢視" : "View"}
+                </button>
+                <button onclick="copyUsagePrompt('${escapeHtml(skill.id)}')" class="p-1.5 rounded-lg border text-xs" style="border-color: var(--border);">
+                  📋
+                </button>
+                <button onclick="editSkillById('${escapeHtml(skill.id)}')" class="private-only p-1.5 rounded-lg border text-xs" style="border-color: var(--border);">
+                  ✏️
+                </button>
+                <button onclick="deleteSkillById('${escapeHtml(skill.id)}')" class="private-only p-1.5 rounded-lg border text-xs hover:text-red-400" style="border-color: var(--border);">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // ================= 6. INTERACTIVE FILTERS =================
+    function handleSearch() {
+      renderSkills();
+    }
+
+    function setAgentFilter(agent) {
+      activeAgentFilter = agent;
+      const tabs = ["ALL", "Antigravity", "Claude", "Cross"];
+      tabs.forEach(t => {
+        const btn = document.getElementById("agentTab" + t);
+        if (btn) {
+          const match = (t === "ALL" && agent === "ALL") ||
+                        (t === "Antigravity" && agent === "Antigravity") ||
+                        (t === "Claude" && agent === "Claude Code") ||
+                        (t === "Cross" && agent === "Cross-Agent");
+          if (match) {
+            btn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-white shadow-sm";
+            btn.style.backgroundColor = "var(--primary)";
+          } else {
+            btn.className = "px-2.5 py-1 rounded-lg font-medium transition text-muted-foreground hover:text-blue-400";
+            btn.style.backgroundColor = "transparent";
+          }
+        }
+      });
+      renderSkills();
+    }
+
+    function setCategoryFilter(cat) {
+      activeFilterCategory = cat;
+      renderCategories();
+      renderSkills();
+    }
+
+    function handleProjectSelect(event) {
+      activeProjectFilter = event.target.value;
+      renderSkills();
+    }
+
+    function filterByProject(proj) {
+      activeProjectFilter = proj;
+      const select = document.getElementById("projectFilterSelect");
+      if (select) select.value = proj;
+      renderSkills();
+    }
+
+    function setViewMode(mode) {
+      activeViewMode = mode;
+      const btnGrid = document.getElementById("btnViewGrid");
+      const btnTable = document.getElementById("btnViewTable");
+
+      if (mode === "grid") {
+        btnGrid.style.backgroundColor = "var(--primary)";
+        btnGrid.style.color = "var(--primary-foreground)";
+        btnTable.style.backgroundColor = "var(--card)";
+        btnTable.style.color = "var(--muted-foreground)";
+      } else {
+        btnTable.style.backgroundColor = "var(--primary)";
+        btnTable.style.color = "var(--primary-foreground)";
+        btnGrid.style.backgroundColor = "var(--card)";
+        btnGrid.style.color = "var(--muted-foreground)";
+      }
+      renderSkills();
+    }
+
+    function clearFilters() {
+      document.getElementById("searchInput").value = "";
+      activeAgentFilter = "ALL";
+      activeFilterCategory = "ALL";
+      activeProjectFilter = "ALL";
+      const select = document.getElementById("projectFilterSelect");
+      if (select) select.value = "ALL";
+      setAgentFilter("ALL");
+      renderCategories();
+      renderSkills();
+    }
+
+    // ================= 7. DETAIL INSPECTOR MODAL =================
+    function openSkillDetail(id) {
+      const skill = skills.find(s => s.id === id);
+      if (!skill) return;
+
+      currentDetailSkillId = id;
+      currentDetailTab = "overview";
+
+      document.getElementById("detailTitle").textContent = skill.title || skill.name;
+      document.getElementById("detailIcon").textContent = skill.icon || "⚡";
+      document.getElementById("detailCategoryBadge").textContent = skill.category;
+      document.getElementById("detailPath").textContent = window.PUBLIC_MODE ? "🔒 Enterprise Repository (Protected)" : (skill.path || "Custom Config Path");
+
+      const agentEl = document.getElementById("detailAgentBadge");
+      agentEl.innerHTML = getAgentBadgeHtml(skill.agent);
+
+      const tagsContainer = document.getElementById("detailTagsContainer");
+      tagsContainer.innerHTML = (skill.tags || []).map(t => `
+        <span class="px-2 py-0.5 rounded-md border text-xs" style="border-color: var(--border); color: var(--muted-foreground); background-color: var(--background);">
+          #${escapeHtml(t)}
+        </span>
+      `).join("");
+
+      updateDetailTabUI();
+      renderDetailTabContent(skill);
+
+      document.getElementById("detailModal").classList.remove("hidden");
+    }
+
+    function closeDetailModal() {
+      document.getElementById("detailModal").classList.add("hidden");
+      currentDetailSkillId = null;
+    }
+
+    function setDetailTab(tab) {
+      currentDetailTab = tab;
+      updateDetailTabUI();
+      const skill = skills.find(s => s.id === currentDetailSkillId);
+      if (skill) renderDetailTabContent(skill);
+    }
+
+    function updateDetailTabUI() {
+      const tabs = ["overview", "usage", "architecture", "raw"];
+      tabs.forEach(t => {
+        const btn = document.getElementById("tabBtn" + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) {
+          if (t === currentDetailTab) {
+            btn.className = "py-3 border-b-2 border-blue-500 text-blue-500 transition font-bold";
+          } else {
+            btn.className = "py-3 border-b-2 border-transparent hover:text-blue-500 transition text-muted-foreground";
+            btn.style.color = "var(--muted-foreground)";
+          }
+        }
+      });
+    }
+
+    function renderDetailTabContent(skill) {
+      const container = document.getElementById("detailContentContainer");
+      if (!container) return;
+
+      const projects = skill.projects || [];
+
+      if (currentDetailTab === "overview") {
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="p-4 rounded-xl border" style="background-color: var(--background); border-color: var(--border);">
+              <h4 class="text-xs font-bold uppercase tracking-wider mb-1.5 text-blue-400">💡 技能概述 (Description)</h4>
+              <p class="leading-relaxed text-xs whitespace-pre-line">${escapeHtml(skill.description)}</p>
+            </div>
+
+            <!-- Associated Projects in Detail -->
+            <div class="p-4 rounded-xl border" style="background-color: var(--background); border-color: var(--border);">
+              <h4 class="text-xs font-bold uppercase tracking-wider mb-2 text-purple-400">📁 應用與關聯專案 (Associated Projects)</h4>
+              ${projects.length > 0 ? `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  ${projects.map(proj => `
+                    <div class="p-2.5 rounded-lg border flex items-center justify-between" style="border-color: var(--border); background-color: var(--card);">
+                      <div class="flex items-center gap-2 truncate">
+                        <span>📂</span>
+                        <span class="font-mono font-semibold truncate text-blue-400">${escapeHtml(proj)}</span>
+                      </div>
+                      <button onclick="copyTextToClipboard('${escapeHtml(proj)}')" class="text-[11px] px-2 py-0.5 rounded border hover:opacity-85" style="border-color: var(--border);">複製名稱</button>
+                    </div>
+                  `).join("")}
+                </div>
+              ` : `
+                <p class="text-xs text-muted-foreground">此為全域通用技能，可套用於任何需要相關功能的專案。</p>
+              `}
+            </div>
+
+            <div class="p-4 rounded-xl border" style="background-color: var(--background); border-color: var(--border);">
+              <h4 class="text-xs font-bold uppercase tracking-wider mb-1.5 text-emerald-400">🎯 觸發時機 (When to Use)</h4>
+              <p class="leading-relaxed text-xs">${escapeHtml(skill.whenToUse || "在符合相關任務領域或包含對應關鍵字時主動觸發。")}</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl border flex flex-col justify-between" style="background-color: var(--background); border-color: var(--border);">
+                <span class="font-semibold text-muted-foreground">生態來源</span>
+                <span class="mt-1">${getAgentBadgeHtml(skill.agent)}</span>
+              </div>
+              <div class="p-3 rounded-xl border flex flex-col justify-between" style="background-color: var(--background); border-color: var(--border);">
+                <span class="font-semibold text-muted-foreground">${window.PUBLIC_MODE ? "架構規範" : "本機檔案路徑"}</span>
+                <span class="font-mono text-[11px] mt-1 truncate ${window.PUBLIC_MODE ? "text-emerald-400" : "text-amber-400"}" title="${escapeHtml(skill.path)}">${escapeHtml(window.PUBLIC_MODE ? "Spec-Driven Architecture (Protected)" : (skill.path || "無本機路徑"))}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentDetailTab === "usage") {
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-muted-foreground">快速指令與使用步驟</span>
+              <button onclick="copySkillField('howToUse')" class="px-2.5 py-1 text-xs rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
+                📋 複製使用指引
+              </button>
+            </div>
+            <div class="p-4 rounded-xl border font-mono text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed" style="background-color: var(--code-bg); color: var(--code-fg); border-color: var(--border);">
+              ${escapeHtml(skill.howToUse)}
+            </div>
+          </div>
+        `;
+      } else if (currentDetailTab === "architecture") {
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-muted-foreground">核心架構與實作規格</span>
+              <button onclick="copySkillField('architecture')" class="px-2.5 py-1 text-xs rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
+                📋 複製架構內容
+              </button>
+            </div>
+            <div class="p-4 rounded-xl border font-mono text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed" style="background-color: var(--code-bg); color: var(--code-fg); border-color: var(--border);">
+              ${escapeHtml(skill.architecture)}
+            </div>
+          </div>
+        `;
+      } else if (currentDetailTab === "raw") {
+        const rawMarkdown = generateSkillMarkdown(skill);
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-muted-foreground">標準 SKILL.md 格式預覽</span>
+              <div class="flex items-center gap-2">
+                <button onclick="copyDetailSkillMD()" class="px-2.5 py-1 text-xs rounded-lg border hover:opacity-85 transition" style="border-color: var(--border);">
+                  📋 複製全文
+                </button>
+                <button onclick="downloadCurrentSkillMD()" class="px-2.5 py-1 text-xs rounded-lg border text-blue-400 hover:opacity-85 transition" style="border-color: var(--border);">
+                  💾 下載 .md
+                </button>
+              </div>
+            </div>
+            <pre class="p-4 rounded-xl border text-xs overflow-x-auto leading-relaxed" style="background-color: var(--code-bg); color: var(--code-fg); border-color: var(--border);"><code>${escapeHtml(rawMarkdown)}</code></pre>
+          </div>
+        `;
+      }
+    }
+
+    function generateSkillMarkdown(skill) {
+      return `---
+name: ${skill.name}
+agent: ${skill.agent || "Antigravity"}
+category: ${skill.category || "Specialized"}
+projects: [${(skill.projects || []).map(p => `"${p}"`).join(", ")}]
+description: >-
+  ${(skill.description || "").replace(/\n/g, ' ')}
+---
+
+# ${skill.title || skill.name}
+
+## 1. Overview & Trigger Conditions
+${skill.whenToUse || skill.description}
+
+## 2. Associated Projects
+${(skill.projects || []).map(p => `- ${p}`).join("\n") || "Universal skill"}
+
+## 3. How to Use
+${skill.howToUse}
+
+## 4. Architecture & Content
+${skill.architecture}
+`;
+    }
+
+    function copySkillField(field) {
+      const skill = skills.find(s => s.id === currentDetailSkillId);
+      if (skill) copyTextToClipboard(skill[field] || "");
+    }
+
+    function downloadCurrentSkillMD() {
+      const skill = skills.find(s => s.id === currentDetailSkillId);
+      if (skill) downloadSkillFile(skill.name, generateSkillMarkdown(skill));
+    }
+
+    function copyDetailSkillMD() {
+      const skill = skills.find(s => s.id === currentDetailSkillId);
+      if (!skill) return;
+      copyTextToClipboard(generateSkillMarkdown(skill));
+    }
+
+    function downloadSkillFile(filename, content) {
+      const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${filename || "SKILL"}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(currentLang === "zh" ? "已下載 SKILL.md" : "Downloaded SKILL.md");
+    }
+
+    // ================= 8. RECORD & EDIT SKILL FORM =================
+    function openSkillModal() {
+      document.getElementById("formModalTitle").textContent = i18n[currentLang].modalNewTitle;
+      document.getElementById("formSkillId").value = "";
+      document.getElementById("skillForm").reset();
+      document.getElementById("formModal").classList.remove("hidden");
+    }
+
+    function editCurrentSkill() {
+      if (!currentDetailSkillId) return;
+      closeDetailModal();
+      editSkillById(currentDetailSkillId);
+    }
+
+    function editSkillById(id) {
+      const skill = skills.find(s => s.id === id);
+      if (!skill) return;
+
+      document.getElementById("formModalTitle").textContent = i18n[currentLang].modalEditTitle;
+      document.getElementById("formSkillId").value = skill.id;
+      document.getElementById("formName").value = skill.name || "";
+      document.getElementById("formAgent").value = skill.agent || "Antigravity";
+      document.getElementById("formCategory").value = skill.category || "";
+      document.getElementById("formProjects").value = (skill.projects || []).join(", ");
+      document.getElementById("formTags").value = (skill.tags || []).join(", ");
+      document.getElementById("formPath").value = skill.path || "";
+      document.getElementById("formDescription").value = skill.description || "";
+      document.getElementById("formWhenToUse").value = skill.whenToUse || "";
+      document.getElementById("formHowToUse").value = skill.howToUse || "";
+      document.getElementById("formArchitecture").value = skill.architecture || "";
+
+      document.getElementById("formModal").classList.remove("hidden");
+    }
+
+    function closeFormModal() {
+      document.getElementById("formModal").classList.add("hidden");
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById("formSkillId").value;
+      const name = document.getElementById("formName").value.trim().toLowerCase().replace(/\s+/g, '-');
+      const agent = document.getElementById("formAgent").value;
+      const category = document.getElementById("formCategory").value.trim();
+      const projectsStr = document.getElementById("formProjects").value.trim();
+      const tagsStr = document.getElementById("formTags").value.trim();
+      const path = document.getElementById("formPath").value.trim();
+      const description = document.getElementById("formDescription").value.trim();
+      const whenToUse = document.getElementById("formWhenToUse").value.trim();
+      const howToUse = document.getElementById("formHowToUse").value.trim();
+      const architecture = document.getElementById("formArchitecture").value.trim();
+
+      const projects = projectsStr ? projectsStr.split(",").map(p => p.trim()).filter(Boolean) : [];
+      const tags = tagsStr ? tagsStr.split(",").map(t => t.trim()).filter(Boolean) : [];
+
+      if (id) {
+        // Edit existing
+        const index = skills.findIndex(s => s.id === id);
+        if (index !== -1) {
+          skills[index] = {
+            ...skills[index],
+            name,
+            title: name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+            agent,
+            category,
+            projects,
+            tags,
+            path,
+            description,
+            whenToUse,
+            howToUse,
+            architecture
+          };
+        }
+      } else {
+        // Create new
+        const newId = name || "skill-" + Date.now();
+        const newSkill = {
+          id: newId,
+          name,
+          title: name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+          agent,
+          category: category || "General",
+          icon: agent === "Claude Code" ? "🟣" : (agent === "Cross-Agent" ? "🌐" : "⚡"),
+          projects,
+          tags,
+          path: path || `Custom Path`,
+          description,
+          whenToUse,
+          howToUse,
+          architecture
+        };
+        skills.unshift(newSkill);
+      }
+
+      saveSkillsToStorage();
+      closeFormModal();
+      populateProjectSelect();
+      renderCategories();
+      renderSkills();
+      renderStats();
+      showToast(i18n[currentLang].toastSaved);
+    }
+
+    function deleteSkillById(id) {
+      const target = skills.find(s => s.id === id);
+      if (!target) return;
+
+      const confirmMsg = currentLang === "zh" 
+        ? `確定要刪除「${target.title || target.name}」的紀錄嗎？` 
+        : `Are you sure you want to delete "${target.title || target.name}"?`;
+
+      if (confirm(confirmMsg)) {
+        skills = skills.filter(s => s.id !== id);
+        saveSkillsToStorage();
+        populateProjectSelect();
+        renderCategories();
+        renderSkills();
+        renderStats();
+        showToast(currentLang === "zh" ? "已刪除技能" : "Skill deleted");
+      }
+    }
+
+    function copyUsagePrompt(id) {
+      const skill = skills.find(s => s.id === id);
+      if (!skill) return;
+
+      const text = `Use the "${skill.name}" skill (${skill.agent}):\n${skill.description}\n\nQuick Usage:\n${skill.howToUse}`;
+      copyTextToClipboard(text);
+    }
+
+    // ================= 9. SYNC GUIDE MODAL =================
+    function openSyncGuideModal() {
+      document.getElementById("syncGuideModal").classList.remove("hidden");
+    }
+
+    function closeSyncGuideModal() {
+      document.getElementById("syncGuideModal").classList.add("hidden");
+    }
+
+    // ================= 10. IMPORT / EXPORT / RESET =================
+    function exportLibraryJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(skills, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `skillvault_full_export_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast(currentLang === "zh" ? "已匯出技能庫 JSON" : "Exported SkillVault JSON");
+    }
+
+    function importLibraryJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            skills = imported;
+            saveSkillsToStorage();
+            populateProjectSelect();
+            renderCategories();
+            renderSkills();
+            renderStats();
+            showToast(i18n[currentLang].toastImported);
+          } else {
+            alert(currentLang === "zh" ? "匯入失敗：JSON 格式不符" : "Import failed: Invalid JSON structure");
+          }
+        } catch (err) {
+          alert("Error parsing JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function resetDefaults() {
+      const confirmMsg = currentLang === "zh" 
+        ? `確定要將技能庫恢復為包含 ${DEFAULT_SKILLS.length} 大 Antigravity 與 Claude Code 技能的預設狀態嗎？` 
+        : `Reset skill library to default ${DEFAULT_SKILLS.length} skills across Antigravity & Claude Code?`;
+      if (confirm(confirmMsg)) {
+        skills = [...DEFAULT_SKILLS];
+        saveSkillsToStorage();
+        clearFilters();
+        populateProjectSelect();
+        renderCategories();
+        renderSkills();
+        renderStats();
+        showToast(i18n[currentLang].toastReset);
+      }
+    }
+
+    // ================= 11. UTILITIES =================
+    function copyTextToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(i18n[currentLang].toastCopied);
+      }).catch(err => {
+        console.error("Copy failed", err);
+      });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const msg = document.getElementById("toastMessage");
+      if (!toast || !msg) return;
+
+      msg.textContent = message;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0");
+        toast.classList.remove("translate-y-0", "opacity-100");
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeForTemplate(str) {
+      if (!str) return "";
+      return str.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$/g, "\\$");
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
