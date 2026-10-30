@@ -269,7 +269,7 @@
     <!-- Footer -->
     <footer class="pt-6 pb-12 text-center text-xs border-t" style="border-color: var(--border); color: var(--muted-foreground);">
       <p>SkillVault • Unified Knowledge Hub for Antigravity & Claude Code • LocalStorage Persistent</p>
-      <p class="mt-1">Auto-sync tool: <code class="px-1.5 py-0.5 rounded" style="background-color: var(--badge-bg);">python sync_skills.py</code></p>
+      <p class="mt-1 private-only">Auto-sync tool: <code class="px-1.5 py-0.5 rounded" style="background-color: var(--badge-bg);">python sync_skills.py</code></p>
       <p class="mt-1">🕒 <span id="lastUpdatedLabel">最後更新</span>: <strong id="lastUpdatedValue">—</strong></p>
     </footer>
   </div>
@@ -599,10 +599,12 @@
         const pubBadge = document.getElementById("publicModeBadge");
         if (pubBadge) pubBadge.classList.remove("hidden");
         skills = [...DEFAULT_SKILLS];
-        renderStats();
-        populateCategorySelect();
+        applyTheme();
+        updateLanguageUI();
         populateProjectSelect();
+        renderCategories();
         renderSkills();
+        renderStats();
         return;
       }
 
