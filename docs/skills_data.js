@@ -137,7 +137,7 @@ window.SKILLS_DATA = [
     "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
   },
   {
-    "id": "antigravity-financial-report-multiformat-analyzer",
+    "id": "financial-report-multiformat-analyzer",
     "name": "financial-report-multiformat-analyzer",
     "title": "Multi-Format Corporate Financial & OpEx Strategic Analyzer",
     "category": "Finance & Analytics",
@@ -150,7 +150,7 @@ window.SKILLS_DATA = [
       "Dashboard",
       "Metrics"
     ],
-    "description": "Systematically analyzes, extracts, normalizes, and audits corporate financial reports across multiple filing formats (SEC 10-K, 10-Q, 20-F, 6-K, Taiwan TWSE annual reports, Japan Yuho, IFRS/US GAAP), currencies (USD, TWD, EUR, JPY, KRW, GBP), scales (thousands, millions, billions), reporting frequencies (Annual vs. Quarterly with linear headcount interpolation), and calculates strategic productivity indices (Rev/GP/OI per FTE, Gross Margin %, Operating Margin %, R&D Reinvestment %, The Pivot inflection point, Value-vs-volume Paradox, Country / Regional tagging, and 5-Stage Lean Maturity rating).",
+    "description": "Systematically analyzes, extracts, normalizes, and audits corporate financial reports across multiple filing formats (SEC 10-K, 10-Q, 20-F, 6-K, Taiwan TWSE annual reports, Japan Yuho, IFRS/US GAAP), verifies tri-layer consistency across physical source PDFs, lossless structured Markdown, and normalized JSON metrics (PDF to MD to JSON chain-of-custody, FCF equations, 4-quarter annual reconciliation, column shift detection), currencies (USD, TWD, EUR, JPY, KRW, GBP), scales (thousands, millions, billions), reporting frequencies (Annual vs. Quarterly with linear headcount interpolation), and calculates strategic productivity indices (Rev/GP/OI per FTE, Gross Margin %, Operating Margin %, R&D Reinvestment %, The Pivot inflection point, Value-vs-volume Paradox, Country / Regional tagging, and 5-Stage Lean Maturity rating).",
     "whenToUse": "This skill equips the agent to systematically process, deduce, normalize, and audit complex multi-national corporate financial filings for semiconductors, high-tech conglomerates, IP licensing houses, and electronic hardware manufacturers.",
     "projects": [
       "FINICIAL ANNUAL REPORT DOWNLOAD TO MD_dashboard",
@@ -417,6 +417,30 @@ window.SKILLS_DATA = [
     "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
   },
   {
+    "id": "semiconductor-data-analysis",
+    "name": "semiconductor-data-analysis",
+    "title": "Semiconductor Test Data Analysis & Reliability Degradation Engine",
+    "category": "Engineering & Quality",
+    "agent": "Antigravity",
+    "icon": "🔬",
+    "tags": [
+      "Semiconductor ATE",
+      "STDF",
+      "HTOL/TC",
+      "C1~C6 Drift",
+      "AEC-Q001 PAT",
+      "Wafer Map"
+    ],
+    "description": "Semiconductor ATE test data analysis, STDF/SBDF/CSV sanity checking, die-level drift & reliability kinetics (HTOL/TC), C1~C6 mathematical inference decision tree, Limit Asymmetry (LA) normalization, AEC-Q001 PAT maverick screening, and wafer spatial pattern defect analytics. Use when working with semiconductor test data, analyzing parametric drifts across stages, diagnosing test vs true degradation issues, or building wafer-level statistical quality gates.",
+    "whenToUse": "Semiconductor ATE test data analysis, STDF/SBDF/CSV sanity checking, die-level drift & reliability kinetics (HTOL/TC), C1~C6 mathematical inference decision tree, Limit Asymmetry (LA) normalization, AEC-Q001 PAT maverick screening, and wafer spatial pattern defect analytics. Use when working with semiconductor test data, analyzing parametric drifts across stages, diagnosing test vs true degradation issues, or building wafer-level statistical quality gates.",
+    "projects": [
+      "sanity check"
+    ],
+    "path": "🔒 Protected Enterprise Repository",
+    "howToUse": "🛡️【公開技術展示】：本技能之完整提示詞工程 (System Prompts)、自動化腳本與底層設定檔依法規與專利資訊安全規範保護。如需進一步技術交流或企業諮詢，歡迎聯繫合作。",
+    "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
+  },
+  {
     "id": "shared-project-memory",
     "name": "shared-project-memory",
     "title": "Shared project memory",
@@ -515,6 +539,31 @@ window.SKILLS_DATA = [
       "project_claude_circuit",
       "rf_circuit_放大器",
       "MCU_PMIC_EV"
+    ],
+    "path": "🔒 Protected Enterprise Repository",
+    "howToUse": "🛡️【公開技術展示】：本技能之完整提示詞工程 (System Prompts)、自動化腳本與底層設定檔依法規與專利資訊安全規範保護。如需進一步技術交流或企業諮詢，歡迎聯繫合作。",
+    "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
+  },
+  {
+    "id": "taigi-voice-verification",
+    "name": "taigi-voice-verification",
+    "title": "Taigi Voice Verification Skill (台語語音合成品質與長文完整度驗證技能)",
+    "category": "Audio & Speech",
+    "agent": "Antigravity",
+    "icon": "🎙️",
+    "tags": [
+      "Taigi TTS",
+      "Tone Sandhi",
+      "Audio QA",
+      "CPS",
+      "VAD Silence",
+      "Meta MMS"
+    ],
+    "description": "審計並驗證台語語音合成（TTS）的音訊品質、語言真偽（防中文/國語混淆）、連讀變調（Tone Sandhi）正確性、長文（500+ 字）完整度與語速字率（CPS）。使用時機：合成台語音訊後進行自動化品質驗收、辨識音訊是否為正港台語、檢查長文有無中斷截斷、爆音削波或異常死寂。",
+    "whenToUse": "審計並驗證台語語音合成（TTS）的音訊品質、語言真偽（防中文/國語混淆）、連讀變調（Tone Sandhi）正確性、長文（500+ 字）完整度與語速字率（CPS）。使用時機：合成台語音訊後進行自動化品質驗收、辨識音訊是否為正港台語、檢查長文有無中斷截斷、爆音削波或異常死寂。",
+    "projects": [
+      "台文教學互動app",
+      "四界行系列"
     ],
     "path": "🔒 Protected Enterprise Repository",
     "howToUse": "🛡️【公開技術展示】：本技能之完整提示詞工程 (System Prompts)、自動化腳本與底層設定檔依法規與專利資訊安全規範保護。如需進一步技術交流或企業諮詢，歡迎聯繫合作。",
@@ -998,4 +1047,4 @@ window.SKILLS_DATA = [
     "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
   }
 ];
-window.SKILLS_SYNCED_AT = "2026-10-30 08:38";
+window.SKILLS_SYNCED_AT = "2026-11-13 20:07";

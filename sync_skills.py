@@ -139,7 +139,9 @@ def get_category(name):
         "svg-technical-figures": "UI & Interactive Tools",
         "taiwanese-book-cover-studio": "Publishing & Typography",
         "taiwanese-moe-audio": "Audio & Speech",
-        "web-speech-tts": "Audio & Speech"
+        "web-speech-tts": "Audio & Speech",
+        "semiconductor-data-analysis": "Engineering & Quality",
+        "taigi-voice-verification": "Audio & Speech"
     }
     return cat_map.get(name, "Specialized Skill")
 
@@ -183,7 +185,9 @@ def get_icon(name):
         "svg-technical-figures": "📐",
         "taiwanese-book-cover-studio": "🎨",
         "taiwanese-moe-audio": "🔊",
-        "web-speech-tts": "📱"
+        "web-speech-tts": "📱",
+        "semiconductor-data-analysis": "🔬",
+        "taigi-voice-verification": "🎙️"
     }
     return icon_map.get(name, "⚡")
 
@@ -227,7 +231,9 @@ def get_tags(name):
         "svg-technical-figures": ["SVG", "Schematics", "Block Diagram", "Signal Chain", "Dark Mode", "Responsive", "Technical Figures"],
         "taiwanese-book-cover-studio": ["Book Cover", "Typography", "300 DPI", "A5 Bleed", "E-Book", "Cinnabar Seal", "Woodblock Print", "Hokkien"],
         "taiwanese-moe-audio": ["MOE Dictionary", "Taiwanese Audio", "ChhoeTaigi", "Tone Sandhi", "Audio Queue", "CDN Versioning"],
-        "web-speech-tts": ["Web Speech API", "Text-to-Speech", "Mobile Audio", "LINE in-app browser", "iPhone Safari", "Android Chrome"]
+        "web-speech-tts": ["Web Speech API", "Text-to-Speech", "Mobile Audio", "LINE in-app browser", "iPhone Safari", "Android Chrome"],
+        "semiconductor-data-analysis": ["Semiconductor ATE", "STDF", "HTOL/TC", "C1~C6 Drift", "AEC-Q001 PAT", "Wafer Map"],
+        "taigi-voice-verification": ["Taigi TTS", "Tone Sandhi", "Audio QA", "CPS", "VAD Silence", "Meta MMS"]
     }
     return tags_map.get(name, [name])
 
@@ -268,7 +274,9 @@ KNOWN_PROJECT_MAP = {
     "svg-technical-figures": ["project_claude_circuit", "rf_circuit_放大器", "MCU_PMIC_EV"],
     "taiwanese-book-cover-studio": ["工作的管見-書", "電子冊", "憂國 - 評論集", "護國_HTML_EBOOK", "自由時報"],
     "taiwanese-moe-audio": ["台中捷運四界行", "台北捷運四界走", "高雄捷運四界走", "台灣鐵路四界行", "景點博物館四界行", "project_claude_tggame_馬力歐"],
-    "web-speech-tts": ["project_claude_circuit", "GARMIN_CONNET_TRACK", "台文教學互動app", "REVERSE_eng_translate_offline"]
+    "web-speech-tts": ["project_claude_circuit", "GARMIN_CONNET_TRACK", "台文教學互動app", "REVERSE_eng_translate_offline"],
+    "semiconductor-data-analysis": ["sanity check"],
+    "taigi-voice-verification": ["台文教學互動app", "四界行系列"]
 }
 
 def scan_all_skills():
