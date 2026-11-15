@@ -141,7 +141,8 @@ def get_category(name):
         "taiwanese-moe-audio": "Audio & Speech",
         "web-speech-tts": "Audio & Speech",
         "semiconductor-data-analysis": "Engineering & Quality",
-        "taigi-voice-verification": "Audio & Speech"
+        "taigi-voice-verification": "Audio & Speech",
+        "taigi-picturebook-video": "Audio & Speech"
     }
     return cat_map.get(name, "Specialized Skill")
 
@@ -187,7 +188,8 @@ def get_icon(name):
         "taiwanese-moe-audio": "🔊",
         "web-speech-tts": "📱",
         "semiconductor-data-analysis": "🔬",
-        "taigi-voice-verification": "🎙️"
+        "taigi-voice-verification": "🎙️",
+        "taigi-picturebook-video": "🎬"
     }
     return icon_map.get(name, "⚡")
 
@@ -233,7 +235,8 @@ def get_tags(name):
         "taiwanese-moe-audio": ["MOE Dictionary", "Taiwanese Audio", "ChhoeTaigi", "Tone Sandhi", "Audio Queue", "CDN Versioning"],
         "web-speech-tts": ["Web Speech API", "Text-to-Speech", "Mobile Audio", "LINE in-app browser", "iPhone Safari", "Android Chrome"],
         "semiconductor-data-analysis": ["Semiconductor ATE", "STDF", "HTOL/TC", "C1~C6 Drift", "AEC-Q001 PAT", "Wafer Map"],
-        "taigi-voice-verification": ["Taigi TTS", "Tone Sandhi", "Audio QA", "CPS", "VAD Silence", "Meta MMS"]
+        "taigi-voice-verification": ["Taigi TTS", "Tone Sandhi", "Audio QA", "CPS", "VAD Silence", "Meta MMS"],
+        "taigi-picturebook-video": ["Taigi TTS", "Picturebook Video", "POJ", "Meta MMS", "FFmpeg", "SRT Subtitles"]
     }
     return tags_map.get(name, [name])
 
@@ -276,7 +279,8 @@ KNOWN_PROJECT_MAP = {
     "taiwanese-moe-audio": ["台中捷運四界行", "台北捷運四界走", "高雄捷運四界走", "台灣鐵路四界行", "景點博物館四界行", "project_claude_tggame_馬力歐"],
     "web-speech-tts": ["project_claude_circuit", "GARMIN_CONNET_TRACK", "台文教學互動app", "REVERSE_eng_translate_offline"],
     "semiconductor-data-analysis": ["sanity check"],
-    "taigi-voice-verification": ["台文教學互動app", "四界行系列"]
+    "taigi-voice-verification": ["台文教學互動app", "四界行系列"],
+    "taigi-picturebook-video": ["台語繪本", "電子冊", "四界行系列"]
 }
 
 def scan_all_skills():

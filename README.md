@@ -6,9 +6,9 @@
 
 ## 🌟 核心特色
 
-1. **涵蓋雙生態 41 大自建與專案技能**：
-   - ⚡ **Antigravity 技能 (28 項)**：
-     - 全域技能 (18 項)：`audiobook-to-markdown`, `bilingual-site-sync`, `datasheet-fact-check`, `fde-ai-swe`, `financial-report-multiformat-analyzer`, `garmin-connect-track`, `generative_ui`, `resume-match-analyzer`, `semiconductor-data-analysis`, `shared-project-memory`, `static-site-audit`, `svg-technical-figures`, `taigi-voice-verification`, `taiwanese-book-cover-studio`, `taiwanese-cultural-webapp`, `taiwanese-epub-publishing`, `taiwanese-moe-audio`, `web-speech-tts`
+1. **涵蓋雙生態 42 大自建與專案技能**：
+   - ⚡ **Antigravity 技能 (29 項)**：
+     - 全域技能 (19 項)：`audiobook-to-markdown`, `bilingual-site-sync`, `datasheet-fact-check`, `fde-ai-swe`, `financial-report-multiformat-analyzer`, `garmin-connect-track`, `generative_ui`, `resume-match-analyzer`, `semiconductor-data-analysis`, `shared-project-memory`, `static-site-audit`, `svg-technical-figures`, `taigi-picturebook-video`, `taigi-voice-verification`, `taiwanese-book-cover-studio`, `taiwanese-cultural-webapp`, `taiwanese-epub-publishing`, `taiwanese-moe-audio`, `web-speech-tts`
      - 專案技能 (10 項)：`digital-archive-ebook-ui`, `google-translate-learning-workflow`, `lean-expert-workspace-manager`, `orid-decision-compass`, `priso-property-declarations`, `quarterly-earnings-batch-updater`, `rwd-compliance-checker`, `semiconductor-dashboard-perf`, `strait-watch-compass-dev`, `workplace-principles-workflow`
    - 🟣 **Claude Code 專案技能 (10 項)**：`emergency-card-editor`, `fintech-toolkit-dev`, `music-transcriber`, `radar-docs`, `run-dynamic-scheduler`, `run-fb-stt`, `run-taigi-tts`, `run-taigi-tug-of-war`, `ship`, `verify-stock-report`
    - 🌐 **跨平台通用技能 (3 項)**：`book-to-skill`, `column-book-publishing`, `portfolio-sync` (同時支援 Claude Code, Antigravity, Copilot CLI, Amp)

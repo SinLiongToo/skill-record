@@ -545,6 +545,32 @@ window.SKILLS_DATA = [
     "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
   },
   {
+    "id": "taigi-picturebook-video",
+    "name": "taigi-picturebook-video",
+    "title": "台語繪本 → 有聲影片",
+    "category": "Audio & Speech",
+    "agent": "Antigravity",
+    "icon": "🎬",
+    "tags": [
+      "Taigi TTS",
+      "Picturebook Video",
+      "POJ",
+      "Meta MMS",
+      "FFmpeg",
+      "SRT Subtitles"
+    ],
+    "description": "把台語繪本（每頁一張圖 + 白話字 POJ 文字）做成有台語旁白的影片：Meta MMS-TTS (facebook/mms-tts-nan) 逐頁合成語音、1920x1080 模糊背景排版、交叉淡化換頁，輸出 MP4 與 POJ 字幕 SRT。使用時機：使用者說「把這本台語繪本做成影音／影片／有聲書」、資料夾內有 Artboard N.png 與 POJ 文稿 (docx)、或要重做、修正某幾頁的旁白時。",
+    "whenToUse": "把台語繪本（每頁一張圖 + 白話字 POJ 文字）做成有台語旁白的影片：Meta MMS-TTS (facebook/mms-tts-nan) 逐頁合成語音、1920x1080 模糊背景排版、交叉淡化換頁，輸出 MP4 與 POJ 字幕 SRT。使用時機：使用者說「把這本台語繪本做成影音／影片／有聲書」、資料夾內有 Artboard N.png 與 POJ 文稿 (docx)、或要重做、修正某幾頁的旁白時。",
+    "projects": [
+      "台語繪本",
+      "電子冊",
+      "四界行系列"
+    ],
+    "path": "🔒 Protected Enterprise Repository",
+    "howToUse": "🛡️【公開技術展示】：本技能之完整提示詞工程 (System Prompts)、自動化腳本與底層設定檔依法規與專利資訊安全規範保護。如需進一步技術交流或企業諮詢，歡迎聯繫合作。",
+    "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
+  },
+  {
     "id": "taigi-voice-verification",
     "name": "taigi-voice-verification",
     "title": "Taigi Voice Verification Skill (台語語音合成品質與長文完整度驗證技能)",
@@ -1047,4 +1073,4 @@ window.SKILLS_DATA = [
     "architecture": "🛡️【架構規範】：採用 Antigravity 與 Claude Code 雙生態 Spec-Driven 架構標準封裝，支援動態上下文管理與可重複調度之 AI 代理人工作流。"
   }
 ];
-window.SKILLS_SYNCED_AT = "2026-11-13 20:07";
+window.SKILLS_SYNCED_AT = "2026-11-15 08:56";
